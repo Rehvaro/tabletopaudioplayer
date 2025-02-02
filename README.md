@@ -6,7 +6,7 @@ Pour l'utiliser rien de plus simple
 * Installez python 3 sur votre PC.
 * Puis dans un terminal installez le plugin flask
 ```bash
-python3 -m pip install flask
+python3 -m pip install flask waitress
 ```
 
 ## Utilisation
