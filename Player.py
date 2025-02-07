@@ -67,16 +67,40 @@ HTML_TEMPLATE = """
         const searchInput = document.getElementById("search");
         const searchTypeRadios = document.getElementsByName("search-type");
 
+        function fadeAudio(targetVolume, duration, callback) {
+            const initialVolume = audioPlayer.volume;
+            const volumeChange = targetVolume - initialVolume;
+            const stepTime = 50; // 50ms per step
+            const steps = duration / stepTime;
+            let currentStep = 0;
+
+            function step() {
+                currentStep++;
+                audioPlayer.volume = initialVolume + (volumeChange * (currentStep / steps));
+                if (currentStep < steps) {
+                    setTimeout(step, stepTime);
+                } else if (callback) {
+                    callback();
+                }
+            }
+            step();
+        }
+
         function playAudio(file, title) {
-            audioPlayer.src = file;
-            audioPlayer.play();
-            currentTrack.textContent = "Lecture: " + title;
+            fadeAudio(0, 2000, function() {
+                audioPlayer.src = file;
+                audioPlayer.play();
+                currentTrack.textContent = "Lecture: " + title;
+                fadeAudio(volumeControl.value, 2000);
+            });
         }
 
         function stopAudio() {
-            audioPlayer.pause();
-            audioPlayer.currentTime = 0;
-            currentTrack.textContent = "Aucun fichier en cours";
+            fadeAudio(0, 2000, function() {
+                audioPlayer.pause();
+                audioPlayer.currentTime = 0;
+                currentTrack.textContent = "Aucun fichier en cours";
+            });
         }
 
         volumeControl.addEventListener("input", function() {
